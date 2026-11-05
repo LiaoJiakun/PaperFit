@@ -34,20 +34,38 @@ def screen_batch(question, criteria, papers, key, *, request=request_json):
             yield {**result, **assessment}
 
 
-def markdown_report(question, criteria, results, *, demo=False):
+def evidence_location(finding):
+    return finding.get("location") or f"PDF 第 {finding['page']} 页"
+
+
+def markdown_report(question, criteria, results, *, demo=False, searches=()):
     lines = ["# PaperFit 文献筛选报告", "", f"研究问题：{question}", ""]
     if demo:
-        lines += ["**离线演示 · 合成样例与模拟模型响应**", ""]
+        lines += ["**离线演示 · 三篇公开论文的 DeepSeek 实测结果**", ""]
     lines += ["## 筛选标准", ""]
     lines += [f"- {label}：{value or '未限定'}" for label, value in criteria.items()]
-    lines += ["", "引文核对检查文字和页码。请复核引文是否支持判断。"]
+    lines += ["", "引文核对检查文字和页码或章节。请复核引文是否支持判断。"]
+    if searches:
+        lines += ["", "## Europe PMC 检索记录", ""]
+        for entry in searches:
+            hits = "请求失败" if entry["hits"] is None else f"数据库命中 {entry['hits']} 条"
+            lines.append(f"- {hits}：`{entry['query']}`")
     for priority in PRIORITIES:
         group = [result for result in results if result["priority"] == priority]
         if not group:
             continue
         lines += ["", f"## {priority}（{len(group)} 篇）"]
         for result in group:
-            lines += ["", f"### {result['name']}", ""]
+            title = result.get("title", result["name"])
+            lines += ["", f"### {title}", ""]
+            if result.get("url"):
+                lines += [f"[论文原文]({result['url']})", ""]
+            if result.get("source_kind"):
+                lines += [f"证据来源：{result['source_kind']}", ""]
+            if result.get("is_preprint"):
+                lines += ["文献类型：预印本", ""]
+            if result.get("source_note"):
+                lines += [result["source_note"], result["triage_reason"], ""]
             if result.get("error"):
                 lines += [f"处理失败：{result['error']}", ""]
             if result["short_pages"]:
@@ -60,5 +78,5 @@ def markdown_report(question, criteria, results, *, demo=False):
                 lines.append(f"- **{finding['criterion']} · {finding['status']}** — {finding['reason']}")
                 if finding["verified"]:
                     quote = " ".join(finding["quote"].split())
-                    lines.append(f"  - PDF 第 {finding['page']} 页：{quote}")
+                    lines.append(f"  - {evidence_location(finding)}：{quote}")
     return "\n".join(lines) + "\n"

@@ -1,0 +1,118 @@
+[
+  {
+    "name": "Sethna-2025-PDAC-mRNA.pdf",
+    "title": "RNA neoantigen vaccines prime long-lived CD8⁺ T cells in pancreatic cancer",
+    "url": "https://www.nature.com/articles/s41586-024-08508-4",
+    "priority": "优先读",
+    "short_pages": [
+      28,
+      29,
+      30,
+      31,
+      32
+    ],
+    "findings": [
+      {
+        "criterion": "研究对象",
+        "status": "匹配",
+        "reason": "试验纳入可手术切除的胰腺导管腺癌患者。",
+        "page": 11,
+        "quote": "patients with single, radiographically suspicious, surgically resectable PDAC",
+        "verified": true
+      },
+      {
+        "criterion": "干预方式",
+        "status": "匹配",
+        "reason": "autogene cevumeran为个体化mRNA新抗原疫苗。",
+        "page": 1,
+        "quote": "individualized neoantigen vaccine with backbone-optimized uridine mRNA–lipoplex nanoparticles",
+        "verified": true
+      },
+      {
+        "criterion": "关注结果",
+        "status": "匹配",
+        "reason": "研究报告疫苗诱导的CD8+ T细胞克隆及免疫反应。",
+        "page": 1,
+        "quote": "autogene cevumeran induces CD8+ T cell clones",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "name": "TNBC-2026-personalized-mRNA.pdf",
+    "title": "Individualized mRNA vaccines evoke durable T cell immunity in adjuvant TNBC",
+    "url": "https://www.nature.com/articles/s41586-025-10004-2",
+    "priority": "背景参考",
+    "short_pages": [
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "findings": [
+      {
+        "criterion": "研究对象",
+        "status": "不匹配",
+        "reason": "研究对象为三阴性乳腺癌（TNBC）患者，而非胰腺癌患者；文中胰腺癌仅出现在背景或参考文献中。",
+        "page": 1,
+        "quote": "in 14 patients with TNBC following surgery and after neoadjuvant or adjuvant therapy.",
+        "verified": true
+      },
+      {
+        "criterion": "干预方式",
+        "status": "匹配",
+        "reason": "研究评估的是个体化新抗原 mRNA 疫苗。",
+        "page": 1,
+        "quote": "assessed an individualized neoantigen mRNA vaccine",
+        "verified": true
+      },
+      {
+        "criterion": "关注结果",
+        "status": "匹配",
+        "reason": "研究报告了疫苗诱导或增强的 T 细胞反应。",
+        "page": 4,
+        "quote": "All 14 patients mounted vaccine-induced or amplified T cell responses",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "name": "AMPLIFY-201-2025-KRAS-peptide.pdf",
+    "title": "Lymph node-targeted, mKRAS-specific amphiphile vaccine in pancreatic and colorectal cancer: phase 1 AMPLIFY-201 trial final results",
+    "url": "https://www.nature.com/articles/s41591-025-03876-4",
+    "priority": "背景参考",
+    "short_pages": [
+      20,
+      21,
+      22,
+      23
+    ],
+    "findings": [
+      {
+        "criterion": "研究对象",
+        "status": "部分匹配",
+        "reason": "研究队列共25例，其中20例为胰腺癌，另5例为结直肠癌，包含胰腺癌患者但非全部。",
+        "page": 1,
+        "quote": "n = 25, 20 pancreatic cancer and 5 colorectal cancer",
+        "verified": true
+      },
+      {
+        "criterion": "干预方式",
+        "status": "不匹配",
+        "reason": "试验干预为ELI-002 2P，即mKRAS两亲肽抗原加CpG佐剂疫苗，并非个性化mRNA疫苗。",
+        "page": 1,
+        "quote": "received monotherapy vaccination with lymph node-targeting ELI-002 2P",
+        "verified": true
+      },
+      {
+        "criterion": "关注结果",
+        "status": "匹配",
+        "reason": "研究报告接种后mKRAS特异性T细胞反应，并分析CD4+和CD8+ T细胞应答。",
+        "page": 2,
+        "quote": "84% (21/25) of patients generated mKRAS-specific T cell responses following ELI-002 2P immunization",
+        "verified": true
+      }
+    ]
+  }
+]

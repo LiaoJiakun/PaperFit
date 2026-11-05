@@ -77,8 +77,12 @@ def screen_paper(question, criteria, pages, key, *, request=request_json):
     if not criteria:
         raise ValueError("请至少确认一项筛选标准。")
 
+    sections = {page["page"]: page["section"] for page in pages if "section" in page}
+    labels = {
+        number: f"段落编号 {number} · {section}" for number, section in sections.items()
+    } if sections else {page["page"]: f"PDF 第 {page['page']} 页" for page in pages}
     document = "\n\n".join(
-        f"【PDF 第 {page['page']} 页】\n{page['text']}"
+        f"【{labels[page['page']]}】\n{page['text']}"
         for page in pages if page["text"]
     )
     page_text = {page["page"]: normalize(page["text"]) for page in pages}
@@ -90,11 +94,15 @@ def screen_paper(question, criteria, pages, key, *, request=request_json):
         "找不到依据时用证据不足，page=0，quote 为空。"
         "引文至少 20 个字符，不能拼接多段。"
     )
+    system = SYSTEM
+    if sections:
+        system = SYSTEM.replace("标实际 PDF 页码", "标原文的段落编号")
+        format_hint += "这是网页全文，page 字段填提供的段落编号。"
 
     def assess(selected, instruction):
         standard = json.dumps(selected, ensure_ascii=False)
         answer = request(
-            SYSTEM, f"{instruction}\n{format_hint}\n筛选标准：{standard}\n\n{context}", key
+            system, f"{instruction}\n{format_hint}\n筛选标准：{standard}\n\n{context}", key
         )
         return check_findings(answer, selected, page_text)
 
@@ -125,6 +133,10 @@ def screen_paper(question, criteria, pages, key, *, request=request_json):
         priority = "低相关"
     else:
         priority = "背景参考"
+
+    for finding in findings:
+        if finding["verified"] and sections:
+            finding["location"] = f"{sections[finding['page']]} · 全文段落 {finding['page']}"
 
     return {
         "summary": "；".join(f"{row['criterion']} {row['status']}" for row in findings),
