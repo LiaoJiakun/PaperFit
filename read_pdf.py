@@ -8,7 +8,10 @@ def read_pdf_pages(file_path):
     """提取 PDF 每一页的文字，返回页码和文字的列表。"""
     pages = []
 
-    with pymupdf.open(file_path) as document:
+    source = {"stream": file_path, "filetype": "pdf"} if isinstance(file_path, bytes) else {"filename": file_path}
+    with pymupdf.open(**source) as document:
+        if not document.is_pdf or document.needs_pass:
+            raise ValueError("文件不是可读取的 PDF，或需要密码。")
         for index, page in enumerate(document):
             pages.append({
                 "page": index + 1,
