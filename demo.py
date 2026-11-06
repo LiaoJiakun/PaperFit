@@ -1,4 +1,4 @@
-"""Saved results from screening three publisher PDFs with DeepSeek."""
+"""Saved DeepSeek screening results from public PDFs and structured full text."""
 
 import json
 from pathlib import Path

@@ -114,5 +114,233 @@
         "verified": true
       }
     ]
+  },
+  {
+    "id": 1,
+    "title": "Personalized RNA neoantigen vaccines stimulate T cells in pancreatic cancer.",
+    "name": "Personalized RNA neoantigen vaccines stimulate T cells in pancreatic cancer.",
+    "url": "https://doi.org/10.1038/s41586-023-06063-y",
+    "pdfs": [
+      "https://www.nature.com/articles/s41586-023-06063-y.pdf",
+      "https://europepmc.org/articles/PMC10171177?pdf=render"
+    ],
+    "pmcid": "PMC10171177",
+    "publication_types": [
+      "Research Support, Non-U.S. Gov't",
+      "research-article",
+      "Clinical Trial, Phase I",
+      "Journal Article",
+      "Research Support, N.I.H., Extramural"
+    ],
+    "record_source": "MED",
+    "is_preprint": false,
+    "summary": "研究对象 匹配；干预方式 匹配；关注结果 匹配",
+    "priority": "优先读",
+    "findings": [
+      {
+        "criterion": "研究对象",
+        "status": "匹配",
+        "reason": "试验纳入可手术切除的胰腺癌患者。",
+        "page": 4,
+        "quote": "in patients with surgically resectable PDAC",
+        "verified": true,
+        "location": "Main · 全文段落 4"
+      },
+      {
+        "criterion": "干预方式",
+        "status": "匹配",
+        "reason": "干预为个体化 mRNA 新抗原疫苗 autogene cevumeran。",
+        "page": 4,
+        "quote": "an individualized mRNA neoantigen vaccine containing up to 20 major histocompatibility complex class I",
+        "verified": true,
+        "location": "Main · 全文段落 4"
+      },
+      {
+        "criterion": "关注结果",
+        "status": "匹配",
+        "reason": "研究检测了疫苗诱导的 T 细胞反应。",
+        "page": 7,
+        "quote": "Eight out of 16 (50%) patients who received the vaccine generated T cell responses",
+        "verified": true,
+        "location": "Safety, feasibility and immunogenicity · 全文段落 7"
+      }
+    ],
+    "repair_attempted": false,
+    "repair_failed": false,
+    "doi": "10.1038/s41586-023-06063-y",
+    "source_kind": "Europe PMC 全文",
+    "short_pages": [],
+    "screened_on": "2026-11-06",
+    "year": "2023",
+    "journal": "Nature"
+  },
+  {
+    "id": 1,
+    "title": "Mutant KRAS vaccine with dual checkpoint blockade in resected pancreatic cancer: a phase I trial.",
+    "name": "Mutant KRAS vaccine with dual checkpoint blockade in resected pancreatic cancer: a phase I trial.",
+    "url": "https://doi.org/10.1038/s41467-026-68324-4",
+    "pdfs": [
+      "https://europepmc.org/articles/PMC12891733?pdf=render"
+    ],
+    "pmcid": "PMC12891733",
+    "publication_types": [
+      "research-article",
+      "Clinical Trial, Phase I",
+      "Journal Article"
+    ],
+    "record_source": "MED",
+    "is_preprint": false,
+    "summary": "研究对象 匹配；干预方式 不匹配；关注结果 匹配",
+    "priority": "背景参考",
+    "findings": [
+      {
+        "criterion": "研究对象",
+        "status": "匹配",
+        "reason": "研究纳入的是接受切除的胰腺导管腺癌（PDAC）患者。",
+        "page": 3,
+        "quote": "we tested mKRAS-VAX in combination with nivolumab (anti–PD-1 antibody) and ipilimumab (anti–CTLA–4 antibody) in patients with resected PDAC.",
+        "verified": true,
+        "location": "Introduction · 全文段落 3"
+      },
+      {
+        "criterion": "干预方式",
+        "status": "不匹配",
+        "reason": "研究干预为 pooled synthetic long peptide vaccine（mKRAS-VAX），不是个性化 mRNA 疫苗。",
+        "page": 32,
+        "quote": "The study vaccine consists of 21-mer synthetic long peptides corresponding to six of the most common KRAS mutation subtypes found in PDAC.",
+        "verified": true,
+        "location": "Vaccine formulation and administration · 全文段落 32"
+      },
+      {
+        "criterion": "关注结果",
+        "status": "匹配",
+        "reason": "研究报告了疫苗接种后 mKRAS 特异性 T 细胞反应显著增加。",
+        "page": 6,
+        "quote": "we found a statistically significant increase in average mKRAS-specific T cell response across all six antigens in 11/12 patients (91.7%)",
+        "verified": true,
+        "location": "mKRAS-VAX plus ICIs is safe and activates mKRAS-specific T cells · 全文段落 6"
+      }
+    ],
+    "repair_attempted": false,
+    "repair_failed": false,
+    "doi": "10.1038/s41467-026-68324-4",
+    "source_kind": "Europe PMC 全文",
+    "short_pages": [],
+    "screened_on": "2026-11-06",
+    "year": "2026",
+    "journal": "Nature communications"
+  },
+  {
+    "id": 1,
+    "title": "The combination of a cancer vaccine, pembrolizumab, and stereotactic body radiation in patients with locally advanced pancreatic cancer: a single-arm, phase II study.",
+    "name": "The combination of a cancer vaccine, pembrolizumab, and stereotactic body radiation in patients with locally advanced pancreatic cancer: a single-arm, phase II study.",
+    "url": "https://doi.org/10.1038/s41467-026-69294-3",
+    "pdfs": [
+      "https://europepmc.org/articles/PMC13149998?pdf=render"
+    ],
+    "pmcid": "PMC13149998",
+    "publication_types": [
+      "Clinical Trial, Phase II",
+      "research-article",
+      "Journal Article"
+    ],
+    "record_source": "MED",
+    "is_preprint": false,
+    "summary": "研究对象 匹配；干预方式 不匹配；关注结果 匹配",
+    "priority": "背景参考",
+    "findings": [
+      {
+        "criterion": "研究对象",
+        "status": "匹配",
+        "reason": "论文纳入的患者为局部晚期胰腺癌（LAPC）患者，属于胰腺癌患者。",
+        "page": 8,
+        "quote": "58 patients with LAPC who met the eligibility criteria were enrolled in the study",
+        "verified": true,
+        "location": "Demographics and clinicopathologic characteristics · 全文段落 8"
+      },
+      {
+        "criterion": "干预方式",
+        "status": "不匹配",
+        "reason": "论文干预为GVAX（GM-CSF分泌同种异体PDAC疫苗）联合环磷酰胺、帕博利珠单抗和SBRT，全文未使用个性化mRNA疫苗作为干预。",
+        "page": 22,
+        "quote": "GVAX administered intradermally in combination with immunomodulatory doses of cyclophosphamide and anti-PD-1 antibody (pembrolizumab), and SBRT",
+        "verified": true,
+        "location": "Study design · 全文段落 22"
+      },
+      {
+        "criterion": "关注结果",
+        "status": "匹配",
+        "reason": "论文报告了治疗前后T细胞免疫反应相关指标，如Teffs浸润增强，但该免疫反应对应的是GVAX/帕博利珠单抗/SBRT联合方案，而非mRNA疫苗。",
+        "page": 6,
+        "quote": "showing that this radioimmunotherapy combination drives TME to feature several antitumor immune response characteristics, including enhanced Teffs infiltration",
+        "verified": true,
+        "location": "Introduction · 全文段落 6"
+      }
+    ],
+    "repair_attempted": false,
+    "repair_failed": false,
+    "doi": "10.1038/s41467-026-69294-3",
+    "source_kind": "Europe PMC 全文",
+    "short_pages": [],
+    "screened_on": "2026-11-06",
+    "year": "2026",
+    "journal": "Nature communications"
+  },
+  {
+    "id": 1,
+    "title": "Therapeutic cancer vaccines in pancreatic cancer.",
+    "name": "Therapeutic cancer vaccines in pancreatic cancer.",
+    "url": "https://doi.org/10.3389/fimmu.2025.1674743",
+    "pdfs": [
+      "https://europepmc.org/articles/PMC12580372?pdf=render"
+    ],
+    "pmcid": "PMC12580372",
+    "publication_types": [
+      "review-article",
+      "Review",
+      "Journal Article"
+    ],
+    "record_source": "MED",
+    "is_preprint": false,
+    "summary": "研究对象 匹配；干预方式 匹配；关注结果 匹配",
+    "priority": "背景参考",
+    "findings": [
+      {
+        "criterion": "研究对象",
+        "status": "匹配",
+        "reason": "文中明确在PDAC辅助治疗患者中评估该疫苗。",
+        "page": 9,
+        "quote": "linked to a delay in the recurrence of PDAC in the adjuvant setting",
+        "verified": true,
+        "location": "Nucleic acid-based vaccine · 全文段落 9"
+      },
+      {
+        "criterion": "干预方式",
+        "status": "匹配",
+        "reason": "文中描述Autogene cevumeran为包含患者特异性新抗原的mRNA疫苗。",
+        "page": 9,
+        "quote": "Autogene cevumeran was an innovative mRNA vaccine that included RO7198457 and featured up to 20 patient-specific neoantigens intravenously delivered by LNPs",
+        "verified": true,
+        "location": "Nucleic acid-based vaccine · 全文段落 9"
+      },
+      {
+        "criterion": "关注结果",
+        "status": "匹配",
+        "reason": "文中报告该疫苗促进了显著的T细胞介导的免疫反应。",
+        "page": 9,
+        "quote": "promoted significant T cell-mediated immune responses and linked to a delay in the recurrence of PDAC in the adjuvant setting",
+        "verified": true,
+        "location": "Nucleic acid-based vaccine · 全文段落 9"
+      }
+    ],
+    "repair_attempted": false,
+    "repair_failed": false,
+    "doi": "10.3389/fimmu.2025.1674743",
+    "source_kind": "Europe PMC 全文",
+    "short_pages": [],
+    "screened_on": "2026-11-06",
+    "year": "2025",
+    "journal": "Frontiers in immunology",
+    "source_note": "综述文献，用作背景参考；其中引用的试验不视为本研究的独立结果。"
   }
 ]

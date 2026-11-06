@@ -12,6 +12,7 @@ from criteria import FIELDS, request_json, suggest_criteria
 from paperfit import MAX_TEXT_CHARS
 from read_pdf import read_pdf_pages
 from screen_paper import active_criteria, screen_paper
+from errors import friendly_error
 
 
 BASE = "https://www.ebi.ac.uk/europepmc/webservices/rest"
@@ -64,14 +65,14 @@ def term_group(values, limit=6):
 
 def plan_queries(question, key):
     plan = request_json(
-        "根据研究问题规划生物医学文献搜索。返回 JSON："
-        '{"population":["疾病简称","疾病全称"],"intervention":["干预术语"],'
-        '"broader_intervention":["更宽的干预术语"]}。'
-        "所有关键词都用英文，各组最多六个。给出常见同义词、简称；"
-        "intervention 应包含术语的自然变体，例如 individualized neoantigen vaccine、"
-        "personalized RNA vaccine、RNA neoantigen vaccine，按问题自行调整。"
-        "broader_intervention 用于补搜不同平台的相关研究。不要加入结局词。"
-        "若问题只限定人群或干预，另一组留空。不要写布尔语法。",
+        "根据用户确认的条件规划生物医药文献搜索。返回 JSON："
+        '{"population":["核心研究对象或领域"],"intervention":["核心方法或技术"],'
+        '"broader_intervention":["用于补搜的较宽方法术语"]}。'
+        "population 是通用研究对象，不限疾病或患者；例如 antibody、protein engineering。"
+        "intervention 可为 AI 方法、研发技术或临床干预。仅选择两个核心概念组，"
+        "不要把所有条件用 AND 强制组合，不把结果/评价指标当成必含检索词。"
+        "所有术语用英文，每组最多六个常用同义词或简称；只有一个核心概念时另一组留空。"
+        "broader_intervention 可留空。不写布尔语法，不添加用户未确认的限制。",
         question, key,
     )
     population = term_group(plan.get("population"))
@@ -164,7 +165,7 @@ def rank_candidates(question, criteria, items, key):
         "使用 candidate id，逐条输出 JSON："
         '{"items":[{"id":1,"relevance":"direct|background|low|unclear",'
         '"kind":"primary|secondary|unclear","reason":"简短中文理由"}]}。'
-        "direct 要求论文自身报告直接匹配人群和干预的原始研究结果，随访分析也算。"
+        "direct 要求论文自身报告直接回答研究问题、符合主要研究对象与方法的原始研究结果，计算、实验、临床与随访研究均可。"
         "综述、社论、评论和新闻即便主题相同也至多为 background。"
         "background 包括主要维度不同但有参考价值的研究。"
         "low 是明显无关。看不出来则用 unclear。不要把引用或讨论的其他研究当成本研究。",
@@ -233,19 +234,46 @@ def full_text(item):
     return None, []
 
 
-def find_papers(question, key, progress=lambda message: None):
-    progress("正在生成筛选标准和检索式")
-    suggested = suggest_criteria(question, key)
-    criteria = active_criteria({label: suggested.get(field) for label, field in FIELDS.items()})
+def review_candidate(question, criteria, item, key):
+    """Review one candidate, also used for retry without repeating search."""
+    result = {**item, "priority": "待人工核查", "short_pages": [], "findings": []}
+    for field in ("error", "source_note", "summary", "repair_attempted", "repair_failed"):
+        result.pop(field, None)
+    try:
+        source, pages = full_text(item)
+        if not pages:
+            result["source_kind"] = "仅摘要" if item["abstract"] else "仅书目信息"
+            result["source_note"] = "本次未获取可筛选的开放全文。可打开论文记录，或取得 PDF 后上传筛选。"
+        else:
+            result["source_kind"] = source
+            if source == "PDF 全文":
+                result["short_pages"] = [page["page"] for page in pages if len(page["text"]) < 50]
+            result.update(screen_paper(question, criteria, pages, key))
+            if item.get("secondary_publication") and result["priority"] == "优先读":
+                result["priority"] = "背景参考"
+                result["source_note"] = "文献类型为综述、评论或新闻，可作背景参考。"
+    except Exception as error:
+        result["error"] = friendly_error(error)
+    return result
+
+
+def find_papers(question, key, progress=lambda message: None, *, criteria=None, on_result=None):
+    if criteria is None:
+        suggested = suggest_criteria(question, key)
+        criteria = {label: suggested.get(field) for label, field in FIELDS.items()}
+    criteria = active_criteria(criteria)
     if not criteria:
-        raise ValueError("未能从研究问题提取筛选标准。请明确人群或干预。")
-    primary, secondary = plan_queries(question, key)
+        raise ValueError("未能从研究问题提取筛选标准。请至少确认一项条件。")
+    progress("筛选标准已确认，正在生成英文检索式")
+    # The confirmed criteria, rather than an earlier question, control retrieval.
+    primary, secondary = plan_queries(json.dumps(criteria, ensure_ascii=False), key)
 
     progress("正在检索 Europe PMC 并初筛摘要")
     hit_count, rows = search(primary, 20)
     searches = [{"query": primary, "hits": hit_count}]
     items = candidates(rows)
     rank_candidates(question, criteria, items, key)
+    progress(f"首轮完成：数据库命中 {hit_count} 条，已初筛 {len(items)} 条候选")
     if secondary and (len(items) < 8 or sum(item["rank"] == "direct" for item in items) < 3):
         progress("直接匹配的候选较少，正在补搜一次")
         try:
@@ -258,6 +286,7 @@ def find_papers(question, key, progress=lambda message: None):
             new_items = combined[len(items):]
             rank_candidates(question, criteria, new_items, key)
             items.extend(new_items)
+            progress(f"补搜完成：累计 {len(items)} 条去重候选")
 
     order = {"direct": 0, "background": 1, "unclear": 2, "low": 3}
     ordered = sorted(items, key=lambda item: order[item["rank"]])
@@ -265,21 +294,9 @@ def find_papers(question, key, progress=lambda message: None):
     results = []
     for index, item in enumerate(shortlist, 1):
         progress(f"正在核查全文 {index} / {len(shortlist)} · {item['title']}")
-        result = {**item, "priority": "待人工核查", "short_pages": [], "findings": []}
-        source, pages = full_text(item)
-        if not pages:
-            result["source_kind"] = "仅摘要" if item["abstract"] else "仅书目信息"
-            result["source_note"] = "本次未获取可筛选的开放全文。"
-        else:
-            result["source_kind"] = source
-            if source == "PDF 全文":
-                result["short_pages"] = [page["page"] for page in pages if len(page["text"]) < 50]
-            try:
-                result.update(screen_paper(question, criteria, pages, key))
-                if item.get("secondary_publication") and result["priority"] == "优先读":
-                    result["priority"] = "背景参考"
-                    result["source_note"] = "文献类型为综述、评论或新闻，可作背景参考。"
-            except Exception:
-                result["error"] = "全文已获取，但筛选请求失败。"
+        result = review_candidate(question, criteria, item, key)
         results.append(result)
+        progress(f"已完成 {index} / {len(shortlist)} 篇全文尝试 · {result['priority']}")
+        if on_result:
+            on_result(result, searches, ordered)
     return criteria, results, searches, ordered

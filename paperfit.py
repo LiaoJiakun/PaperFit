@@ -1,6 +1,7 @@
 from criteria import request_json
 from read_pdf import read_pdf_pages
 from screen_paper import screen_paper
+from errors import friendly_error
 
 
 PRIORITIES = ("优先读", "背景参考", "低相关", "待人工核查")
@@ -28,8 +29,8 @@ def screen_batch(question, criteria, papers, key, *, request=request_json):
 
         try:
             assessment = screen_paper(question, criteria, pages, key, request=request)
-        except Exception:
-            yield {**result, "error": "筛选请求失败。请检查 DeepSeek 密钥、余额和网络后重试。"}
+        except Exception as error:
+            yield {**result, "error": friendly_error(error)}
         else:
             yield {**result, **assessment}
 
@@ -38,12 +39,15 @@ def evidence_location(finding):
     return finding.get("location") or f"PDF 第 {finding['page']} 页"
 
 
-def markdown_report(question, criteria, results, *, demo=False, searches=()):
+def markdown_report(question, criteria, results, *, demo=False, searches=(), conditions=(), status=None):
     lines = ["# PaperFit 文献筛选报告", "", f"研究问题：{question}", ""]
     if demo:
-        lines += ["**离线演示 · 三篇公开论文的 DeepSeek 实测结果**", ""]
+        lines += ["**体验 · 公开论文的 DeepSeek 历史实测结果**", ""]
     lines += ["## 筛选标准", ""]
-    lines += [f"- {label}：{value or '未限定'}" for label, value in criteria.items()]
+    weights = {r["条件"].strip(): r["重要性"] for r in conditions}
+    lines += [f"- {label}：{value or '未限定'}（{weights.get(label, '优先考虑')}）" for label, value in criteria.items()]
+    if status:
+        lines += ["", f"版本状态：{status}"]
     lines += ["", "引文核对检查文字和页码或章节。请复核引文是否支持判断。"]
     if searches:
         lines += ["", "## Europe PMC 检索记录", ""]
@@ -60,12 +64,16 @@ def markdown_report(question, criteria, results, *, demo=False, searches=()):
             lines += ["", f"### {title}", ""]
             if result.get("url"):
                 lines += [f"[论文原文]({result['url']})", ""]
+            if result.get("eligibility"):
+                lines += [f"条件符合情况：{result['eligibility']}；相关性：{result.get('relevance', '尚未判断')}；证据状态：{result.get('evidence_status', '待核对')}", ""]
+            if result.get("failed_conditions"):
+                lines += ["不符合必须条件：" + "、".join(result["failed_conditions"]), ""]
             if result.get("source_kind"):
                 lines += [f"证据来源：{result['source_kind']}", ""]
             if result.get("is_preprint"):
                 lines += ["文献类型：预印本", ""]
             if result.get("source_note"):
-                lines += [result["source_note"], result["triage_reason"], ""]
+                lines += [result["source_note"], result.get("triage_reason", ""), ""]
             if result.get("error"):
                 lines += [f"处理失败：{result['error']}", ""]
             if result["short_pages"]:
